@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบสมัครงาน - UNITECH PCB (Thailand) Co., Ltd.</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Sarabun", "Noto Sans Thai", -apple-system, sans-serif;
+    background: #f4f5f7;
+    margin: 0;
+    padding: 0;
+    color: #1f2937;
+  }
+  .header {
+    background: #ffffff;
+    color: #0f4c81;
+    padding: 24px 20px;
+    text-align: center;
+    border-bottom: 4px solid #0f4c81;
+  }
+  .company-logo { height: 44px; margin-bottom: 10px; }
+  .header h1 { font-size: 20px; margin: 0 0 4px; color: #0f4c81; }
+  .header p { font-size: 13px; margin: 0; color: #555; }
+  .container {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .card h2 {
+    font-size: 15px;
+    color: #0f4c81;
+    margin: 0 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 14px 0 6px;
+  }
+  label .required { color: #dc2626; }
+  label .hint {
+    display: block;
+    font-weight: 400;
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 2px;
+  }
+  input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    background: #fff;
+  }
+  textarea { resize: vertical; min-height: 90px; }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #0f4c81;
+    box-shadow: 0 0 0 3px rgba(15,76,129,0.1);
+  }
+  .consent-box {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: #f9fafb;
+    padding: 14px;
+    border-radius: 8px;
+    margin-top: 14px;
+  }
+  .consent-box input { width: auto; margin-top: 3px; }
+  .consent-box p { font-size: 13px; margin: 0; line-height: 1.5; }
+  .submit-btn {
+    width: 100%;
+    background: #0f4c81;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .submit-btn:disabled { background: #9ca3af; }
+  .submit-btn:active { background: #0c3c66; }
+  .calc-q { margin-top: 14px; }
+  .calc-q .calc-label { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .calc-q input { width: 120px; }
+  #successScreen, #errorScreen, #dupScreen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  #successScreen .icon, #errorScreen .icon, #dupScreen .icon { font-size: 48px; margin-bottom: 12px; }
+  #successScreen h2 { color: #0f4c81; }
+  #errorScreen h2, #dupScreen h2 { color: #b45309; }
+  .loading { display: none; text-align: center; padding: 40px; }
+  .spinner {
+    border: 3px solid #e5e7eb;
+    border-top: 3px solid #0f4c81;
+    border-radius: 50%;
+    width: 32px; height: 32px;
+    margin: 0 auto 12px;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="data:image/png;base64,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" alt="Unitech logo" class="company-logo">
+  <h1>ใบสมัครงาน</h1>
+  <p>UNITECH PCB (Thailand) Co., Ltd.</p>
+</div>
+
+<div class="container">
+
+  <form id="applicationForm">
+
+    <div class="card">
+      <h2>ข้อมูลส่วนตัว</h2>
+
+      <label>ชื่อ-นามสกุล <span class="required">*</span></label>
+      <input type="text" name="fullName" required>
+
+      <label>วัน/เดือน/ปีเกิด <span class="required">*</span></label>
+      <input type="date" name="birthDate" required>
+
+      <label>เบอร์โทรศัพท์ <span class="required">*</span></label>
+      <input type="tel" name="phone" required pattern="[0-9]{9,10}" placeholder="08XXXXXXXX">
+
+      <label>อีเมล <span class="required">*</span>
+        <span class="hint">ทางบริษัทจะติดต่อกลับผ่านอีเมลนี้ หากท่านผ่านการพิจารณาเบื้องต้น</span>
+      </label>
+      <input type="email" name="email" required>
+    </div>
+
+    <div class="card">
+      <h2>ตำแหน่งและการศึกษา</h2>
+
+      <label>ตำแหน่งที่สนใจสมัคร <span class="required">*</span></label>
+      <select name="position" required>
+        <option value="">-- เลือกตำแหน่ง --</option>
+        <option value="พนักงานฝ่ายผลิต">พนักงานฝ่ายผลิต</option>
+        <option value="QA/QC">QA/QC</option>
+        <option value="คลังสินค้า">คลังสินค้า</option>
+        <option value="อื่นๆ">อื่นๆ</option>
+      </select>
+
+      <label>วุฒิการศึกษา <span class="required">*</span></label>
+      <select name="education" required>
+        <option value="">-- เลือกวุฒิ --</option>
+        <option value="ประถมศึกษา">ประถมศึกษา</option>
+        <option value="มัธยมศึกษาตอนต้น">มัธยมศึกษาตอนต้น</option>
+        <option value="มัธยมศึกษาตอนปลาย/ปวช.">มัธยมศึกษาตอนปลาย / ปวช.</option>
+        <option value="ปวส./อนุปริญญา">ปวส. / อนุปริญญา</option>
+        <option value="ปริญญาตรี">ปริญญาตรี</option>
+        <option value="สูงกว่าปริญญาตรี">สูงกว่าปริญญาตรี</option>
+        <option value="ไม่ระบุ">ไม่ระบุ</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <h2>ประสบการณ์ทำงาน</h2>
+
+      <label>ประเภทประสบการณ์ <span class="required">*</span></label>
+      <select name="experienceType" required>
+        <option value="">-- เลือก --</option>
+        <option value="ไม่มีประสบการณ์">ไม่มีประสบการณ์</option>
+        <option value="มีประสบการณ์โรงงาน สายงานอิเล็กทรอนิคส์">มีประสบการณ์โรงงาน สายงานอิเล็กทรอนิคส์</option>
+        <option value="มีประสบการณ์โรงงาน สายงานอื่น">มีประสบการณ์โรงงาน สายงานอื่น</option>
+        <option value="มีประสบการณ์โรงงาน PCB">มีประสบการณ์โรงงาน PCB</option>
+      </select>
+
+      <label>ประสบการณ์ทำงาน <span class="required">*</span>
+        <span class="hint">กรุณาเขียนโดยละเอียดที่สุดเท่าที่ทำได้ เช่น เคยทำงานที่ไหน ตำแหน่งอะไร ระยะเวลานานเท่าไร
+        เคยเกี่ยวข้องกับสารเคมีหรือไม่ อย่างไร / เคยยกของหนักหรือไม่ ยกอะไร น้ำหนักประมาณเท่าไร /
+        ใช้คอมพิวเตอร์เป็นหรือไม่ โปรแกรมอะไรบ้าง / เคยส่องกล้อง (microscope) หรือไม่ งานลักษณะไหน /
+        เคยใช้เครื่องมือวัด (เวอร์เนีย, ไมโครมิเตอร์ ฯลฯ) หรือไม่ ยิ่งเขียนละเอียดยิ่งช่วยในการพิจารณา</span>
+      </label>
+      <textarea name="experience" id="experienceField" required rows="15" placeholder="เขียนได้เต็มที่ ไม่จำกัดความยาว..."></textarea>
+
+      <label>วันที่พร้อมเริ่มงาน <span class="required">*</span></label>
+      <input type="date" name="startDate" required>
+    </div>
+
+    <div class="card">
+      <h2>การเดินทาง</h2>
+      <label>ระยะทางจากที่พักถึงโรงงาน (กิโลเมตร) <span class="required">*</span></label>
+      <input type="number" name="travelDistance" step="0.1" required>
+
+      <label>พาหนะที่ใช้เดินทางมาทำงาน <span class="required">*</span></label>
+      <select name="travelMethod" required>
+        <option value="">-- เลือก --</option>
+        <option value="รถยนต์ส่วนตัว">รถยนต์ส่วนตัว</option>
+        <option value="รถจักรยานยนต์">รถจักรยานยนต์</option>
+        <option value="มีคนมาส่ง">มีคนมาส่ง</option>
+        <option value="รถรับส่งพนักงาน">รถรับส่งพนักงาน</option>
+        <option value="อื่นๆ">อื่นๆ</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <h2>ผู้ติดต่อฉุกเฉิน</h2>
+      <label>ชื่อ-นามสกุล <span class="required">*</span></label>
+      <input type="text" name="emergencyName" required>
+
+      <label>เบอร์โทรศัพท์ <span class="required">*</span></label>
+      <input type="tel" name="emergencyPhone" required>
+
+      <label>ความสัมพันธ์ <span class="required">*</span></label>
+      <input type="text" name="emergencyRelation" required placeholder="เช่น บิดา, มารดา, คู่สมรส, พี่น้อง">
+    </div>
+
+    <div class="card">
+      <h2>ข้อมูลเพิ่มเติม</h2>
+      <label>รู้จักตำแหน่งงานนี้จากช่องทางไหน</label>
+      <select name="referralSource">
+        <option value="">-- เลือก --</option>
+        <option value="เพื่อน/คนรู้จักแนะนำ">เพื่อน/คนรู้จักแนะนำ</option>
+        <option value="Facebook">Facebook</option>
+        <option value="JobThai">JobThai</option>
+        <option value="ป้ายหน้าโรงงาน">ป้ายหน้าโรงงาน</option>
+        <option value="อื่นๆ">อื่นๆ</option>
+      </select>
+
+      <label>เคยสมัคร/ทำงานกับ UNITECH มาก่อนหรือไม่</label>
+      <select name="previousEmployment">
+        <option value="ไม่เคย">ไม่เคย</option>
+        <option value="เคย">เคย (โปรดแจ้ง HR ช่วงเวลาที่เคยทำงาน)</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <h2>แบบทดสอบพื้นฐาน</h2>
+      <p style="font-size:13px;color:#6b7280;margin-top:-8px;">ระบบจะตรวจให้อัตโนมัติทันทีที่ส่งใบสมัคร</p>
+
+      <label>พิมพ์ตัวอักษรภาษาอังกฤษ <b>a ถึง z</b> (ตัวพิมพ์เล็ก) เรียงตามลำดับ ติดกันไม่เว้นวรรค <span class="required">*</span></label>
+      <input type="text" name="typingLower" id="typingLower" required autocomplete="off" autocapitalize="off">
+
+      <label>พิมพ์ตัวอักษรภาษาอังกฤษ <b>A ถึง Z</b> (ตัวพิมพ์ใหญ่) เรียงตามลำดับ ติดกันไม่เว้นวรรค <span class="required">*</span></label>
+      <input type="text" name="typingUpper" id="typingUpper" required autocomplete="off" autocapitalize="off">
+
+      <div id="calcQuestions"></div>
+    </div>
+
+    <div class="card">
+      <div class="consent-box">
+        <input type="checkbox" name="consent" id="consent" required>
+        <p>
+          ข้าพเจ้ายินยอมให้ UNITECH PCB (Thailand) Co., Ltd. เก็บรวบรวมและใช้ข้อมูลส่วนบุคคลข้างต้น
+          เพื่อวัตถุประสงค์ในการพิจารณาคัดเลือกเข้าทำงานเท่านั้น ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)
+        </p>
+      </div>
+      <button type="submit" class="submit-btn" id="submitBtn">ส่งใบสมัคร</button>
+    </div>
+
+  </form>
+
+  <div class="loading" id="loadingScreen">
+    <div class="spinner"></div>
+    <p>กำลังส่งใบสมัคร...</p>
+  </div>
+
+  <div id="successScreen" class="card">
+    <div class="icon">✅</div>
+    <h2>ส่งใบสมัครสำเร็จ</h2>
+    <p>ขอบคุณสำหรับการสมัครงานค่ะ ทางบริษัทได้รับใบสมัครของท่านเรียบร้อยแล้ว
+    หากท่านผ่านการพิจารณาเบื้องต้น จะมีเจ้าหน้าที่ติดต่อกลับผ่านทางอีเมลหรือเบอร์โทรศัพท์ที่ท่านให้ไว้</p>
+  </div>
+
+  <div id="dupScreen" class="card">
+    <div class="icon">⚠️</div>
+    <h2>พบข้อมูลการสมัครล่าสุด</h2>
+    <p>ระบบพบว่าท่านเคยส่งใบสมัครมาแล้วในช่วง 2 เดือนที่ผ่านมา
+    ทางบริษัทได้รับข้อมูลของท่านไว้แล้ว และจะพิจารณาจากใบสมัครล่าสุด ไม่จำเป็นต้องส่งซ้ำค่ะ</p>
+  </div>
+
+  <div id="errorScreen" class="card">
+    <div class="icon">❌</div>
+    <h2>เกิดข้อผิดพลาด</h2>
+    <p>ไม่สามารถส่งใบสมัครได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง หรือติดต่อฝ่ายบุคคลโดยตรง</p>
+  </div>
+
+</div>
+
+<script>
+  // TODO: วาง URL ของ Google Apps Script Web App ที่ deploy แล้วตรงนี้
+  const SCRIPT_URL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+
+  const form = document.getElementById('applicationForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const loadingScreen = document.getElementById('loadingScreen');
+  const successScreen = document.getElementById('successScreen');
+  const dupScreen = document.getElementById('dupScreen');
+  const errorScreen = document.getElementById('errorScreen');
+
+  // ขยายกล่องข้อความประสบการณ์อัตโนมัติตามที่พิมพ์ ไม่จำกัดความยาว
+  const experienceField = document.getElementById('experienceField');
+  experienceField.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+  });
+
+  // โจทย์คำนวณพื้นฐาน (บวก-ลบ) — ตรวจอัตโนมัติตอนส่งฟอร์ม
+  const CALC_QUESTIONS = [
+    { label: "7 + 5 = ?", answer: 12 },
+    { label: "15 - 6 = ?", answer: 9 },
+    { label: "9 + 8 = ?", answer: 17 },
+    { label: "20 - 12 = ?", answer: 8 },
+    { label: "23 + 14 = ?", answer: 37 },
+    { label: "30 - 17 = ?", answer: 13 },
+    { label: "45 + 8 = ?", answer: 53 },
+    { label: "50 - 27 = ?", answer: 23 }
+  ];
+
+  const calcContainer = document.getElementById('calcQuestions');
+  CALC_QUESTIONS.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'calc-q';
+    div.innerHTML = `<div class="calc-label">ข้อ ${i + 1}: ${q.label}</div>
+      <input type="number" name="calc_${i}" id="calc_${i}" required>`;
+    calcContainer.appendChild(div);
+  });
+
+  function gradeTest() {
+    const lowerTarget = "abcdefghijklmnopqrstuvwxyz";
+    const upperTarget = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const typingLowerCorrect = document.getElementById('typingLower').value.trim() === lowerTarget;
+    const typingUpperCorrect = document.getElementById('typingUpper').value.trim() === upperTarget;
+
+    let calcCorrect = 0;
+    CALC_QUESTIONS.forEach((q, i) => {
+      const val = parseInt(document.getElementById('calc_' + i).value, 10);
+      if (val === q.answer) calcCorrect++;
+    });
+
+    return {
+      typingLowerResult: typingLowerCorrect ? "ผ่าน" : "ไม่ผ่าน",
+      typingUpperResult: typingUpperCorrect ? "ผ่าน" : "ไม่ผ่าน",
+      calcScore: calcCorrect + "/" + CALC_QUESTIONS.length
+    };
+  }
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    data.consent = form.consent.checked ? "ยินยอม" : "ไม่ยินยอม";
+
+    const gradeResult = gradeTest();
+    data.typingLowerResult = gradeResult.typingLowerResult;
+    data.typingUpperResult = gradeResult.typingUpperResult;
+    data.calcScore = gradeResult.calcScore;
+
+    form.style.display = 'none';
+    loadingScreen.style.display = 'block';
+
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
+
+      loadingScreen.style.display = 'none';
+
+      if (result.status === 'duplicate') {
+        dupScreen.style.display = 'block';
+      } else if (result.status === 'success') {
+        successScreen.style.display = 'block';
+      } else {
+        errorScreen.style.display = 'block';
+      }
+    } catch (err) {
+      loadingScreen.style.display = 'none';
+      errorScreen.style.display = 'block';
+    }
+  });
+</script>
+
+</body>
+</html>
