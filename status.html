@@ -40,6 +40,7 @@
   .status-นัดสัมภาษณ์รอบแรก { background: #dbeafe; color: #1e40af; }
   .status-ผ่านรอบแรกรอหัวหน้า { background: #e0e7ff; color: #3730a3; }
   .status-ผ่านติดต่อแล้ว { background: #dcfce7; color: #166534; }
+  .status-ผ่านนัดเซ็นสัญญา { background: #cffafe; color: #155e75; }
   .status-ไม่ผ่าน { background: #fee2e2; color: #991b1b; }
 
   .info-row { margin-bottom: 12px; }
@@ -119,6 +120,30 @@
         <strong>การแต่งกาย:</strong> กรุณาแต่งกายสุภาพ งดสวมกางเกงยีนส์ขาด และไม่อนุญาตให้สวมรองเท้าแตะเข้าสัมภาษณ์
       </div>
     </div>
+
+    <div id="contractDetails" style="display:none;">
+      <div class="info-row">
+        <div class="label">วันที่นัดเซ็นสัญญา</div>
+        <div class="value" id="resultContractDate"></div>
+      </div>
+      <div class="info-row">
+        <div class="label">เวลานัด</div>
+        <div class="value" id="resultContractTime"></div>
+      </div>
+      <div class="info-row">
+        <div class="label">วันที่เริ่มงาน</div>
+        <div class="value" id="resultStartDate"></div>
+      </div>
+      <div style="background:#dcfce7;border:1px solid #bbf7d0;border-radius:8px;padding:14px;margin-top:14px;font-size:13px;color:#14532d;line-height:1.6;">
+        <strong>เอกสารที่กรุณาเตรียมมาในวันเซ็นสัญญา</strong><br>
+        - บัตรประชาชนตัวจริง<br>
+        - สำเนาวุฒิการศึกษา<br>
+        - สำเนาทะเบียนบ้าน<br>
+        - รูปถ่าย 1 นิ้ว จำนวน 2 ใบ<br>
+        - สมุดบัญชีธนาคารกรุงเทพ (ถ้ามี)<br><br>
+        <strong>การแต่งกาย:</strong> กรุณาแต่งกายสุภาพ งดสวมกางเกงยีนส์ขาด และไม่อนุญาตให้สวมรองเท้าแตะ
+      </div>
+    </div>
     <button type="button" class="submit-btn" onclick="resetLookup()">ตรวจสอบเลขอื่น</button>
   </div>
 
@@ -147,6 +172,7 @@
     "นัดสัมภาษณ์รอบแรก": "status-นัดสัมภาษณ์รอบแรก",
     "ผ่านรอบแรก รอหัวหน้า": "status-ผ่านรอบแรกรอหัวหน้า",
     "ผ่าน ติดต่อแล้ว": "status-ผ่านติดต่อแล้ว",
+    "ผ่าน นัดเซ็นสัญญา": "status-ผ่านนัดเซ็นสัญญา",
     "ไม่ผ่าน": "status-ไม่ผ่าน"
   };
 
@@ -198,6 +224,16 @@
           interviewDetails.style.display = 'block';
         } else {
           interviewDetails.style.display = 'none';
+        }
+
+        const contractDetails = document.getElementById('contractDetails');
+        if (result.contractDate) {
+          document.getElementById('resultContractDate').textContent = result.contractDate || '-';
+          document.getElementById('resultContractTime').textContent = result.contractTime || '-';
+          document.getElementById('resultStartDate').textContent = result.startDateConfirmed || '-';
+          contractDetails.style.display = 'block';
+        } else {
+          contractDetails.style.display = 'none';
         }
 
         document.getElementById('resultCard').style.display = 'block';
