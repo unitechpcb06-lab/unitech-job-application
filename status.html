@@ -38,9 +38,11 @@
   }
   .status-รอพิจารณา { background: #fef3c7; color: #92400e; }
   .status-นัดสัมภาษณ์รอบแรก { background: #dbeafe; color: #1e40af; }
+  .status-เชิญมาเขียนใบสมัคร { background: #ede9fe; color: #5b21b6; }
   .status-ผ่านรอบแรกรอหัวหน้า { background: #e0e7ff; color: #3730a3; }
   .status-ผ่านติดต่อแล้ว { background: #dcfce7; color: #166534; }
   .status-ผ่านนัดเซ็นสัญญา { background: #cffafe; color: #155e75; }
+  .status-นัดเริ่มงาน { background: #d1fae5; color: #065f46; }
   .status-ไม่ผ่าน { background: #fee2e2; color: #991b1b; }
 
   .info-row { margin-bottom: 12px; }
@@ -97,10 +99,11 @@
     <div class="info-row">
       <div class="label">สถานะใบสมัคร</div>
       <div><span class="status-badge" id="resultStatusBadge"></span></div>
+      <p id="waitingNote" style="display:none;font-size:13px;color:#6b7280;margin:8px 0 0;">หากไม่มีการติดต่อกลับภายใน 1 สัปดาห์นับจากวันที่สมัคร ท่านสามารถสมัครใหม่ได้อีกครั้งด้วยตนเองผ่านหน้าสมัครงาน ไม่ต้องโทรสอบถามค่ะ</p>
     </div>
     <div id="interviewDetails" style="display:none;">
       <div class="info-row">
-        <div class="label">ตำแหน่งที่นัดสัมภาษณ์</div>
+        <div class="label">ตำแหน่ง</div>
         <div class="value" id="resultPosition"></div>
       </div>
       <div class="info-row">
@@ -112,12 +115,12 @@
         <div class="value" id="resultTime"></div>
       </div>
       <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:14px;margin-top:14px;font-size:13px;color:#78350f;line-height:1.6;">
-        <strong>เอกสารที่กรุณาเตรียมมาในวันสัมภาษณ์</strong><br>
-        - บัตรประชาชนตัวจริง<br>
-        - สำเนาวุฒิการศึกษา<br>
-        - สำเนาทะเบียนบ้าน<br>
+        <strong>เอกสารที่กรุณาเตรียมมา</strong><br>
+        - บัตรประชาชนตัวจริง พร้อมสำเนา 1 ชุด<br>
+        - วุฒิการศึกษาตัวจริง พร้อมสำเนา 1 ชุด<br>
+        - ทะเบียนบ้านตัวจริง พร้อมสำเนา 1 ชุด<br>
         - รูปถ่าย 1 นิ้ว จำนวน 1 รูป<br><br>
-        <strong>การแต่งกาย:</strong> กรุณาแต่งกายสุภาพ งดสวมกางเกงยีนส์ขาด และไม่อนุญาตให้สวมรองเท้าแตะเข้าสัมภาษณ์
+        <strong>การแต่งกาย:</strong> กรุณาแต่งกายสุภาพ งดสวมกางเกงยีนส์ขาด และไม่อนุญาตให้สวมรองเท้าแตะ
       </div>
     </div>
 
@@ -142,6 +145,23 @@
         - รูปถ่าย 1 นิ้ว จำนวน 2 ใบ<br>
         - สมุดบัญชีธนาคารกรุงเทพ (ถ้ามี)<br><br>
         <strong>การแต่งกาย:</strong> กรุณาแต่งกายสุภาพ งดสวมกางเกงยีนส์ขาด และไม่อนุญาตให้สวมรองเท้าแตะ
+      </div>
+    </div>
+
+    <div id="startWorkDetails" style="display:none;">
+      <div class="info-row">
+        <div class="label">วันที่เริ่มงาน</div>
+        <div class="value" id="resultStartWorkDate"></div>
+      </div>
+      <div class="info-row">
+        <div class="label">เวลารายงานตัว</div>
+        <div class="value" id="resultStartWorkTime"></div>
+      </div>
+      <div style="background:#cffafe;border:1px solid #a5f3fc;border-radius:8px;padding:14px;margin-top:14px;font-size:13px;color:#164e63;line-height:1.6;">
+        <strong>สิ่งที่กรุณาเตรียมมาในวันแรก</strong><br>
+        - บัตรประชาชนตัวจริง<br>
+        - รองเท้าหุ้มส้น (ห้ามสวมรองเท้าแตะ)<br>
+        - แต่งกายสุภาพ พร้อมสำหรับการปฐมนิเทศ
       </div>
     </div>
     <button type="button" class="submit-btn" onclick="resetLookup()">ตรวจสอบเลขอื่น</button>
@@ -170,9 +190,11 @@
   const STATUS_CLASS_MAP = {
     "รอพิจารณา": "status-รอพิจารณา",
     "นัดสัมภาษณ์รอบแรก": "status-นัดสัมภาษณ์รอบแรก",
+    "เชิญมาเขียนใบสมัคร": "status-เชิญมาเขียนใบสมัคร",
     "ผ่านรอบแรก รอหัวหน้า": "status-ผ่านรอบแรกรอหัวหน้า",
     "ผ่าน ติดต่อแล้ว": "status-ผ่านติดต่อแล้ว",
     "ผ่าน นัดเซ็นสัญญา": "status-ผ่านนัดเซ็นสัญญา",
+    "นัดเริ่มงาน": "status-นัดเริ่มงาน",
     "ไม่ผ่าน": "status-ไม่ผ่าน"
   };
 
@@ -216,6 +238,9 @@
         badge.textContent = result.applicationStatus;
         badge.className = 'status-badge ' + (STATUS_CLASS_MAP[result.applicationStatus] || 'status-รอพิจารณา');
 
+        document.getElementById('waitingNote').style.display =
+          (result.applicationStatus === 'รอพิจารณา' || !result.applicationStatus) ? 'block' : 'none';
+
         const interviewDetails = document.getElementById('interviewDetails');
         if (result.interviewDate) {
           document.getElementById('resultPosition').textContent = result.interviewPosition || '-';
@@ -234,6 +259,15 @@
           contractDetails.style.display = 'block';
         } else {
           contractDetails.style.display = 'none';
+        }
+
+        const startWorkDetails = document.getElementById('startWorkDetails');
+        if (result.startWorkTime) {
+          document.getElementById('resultStartWorkDate').textContent = result.startDateConfirmed || '-';
+          document.getElementById('resultStartWorkTime').textContent = result.startWorkTime || '-';
+          startWorkDetails.style.display = 'block';
+        } else {
+          startWorkDetails.style.display = 'none';
         }
 
         document.getElementById('resultCard').style.display = 'block';
