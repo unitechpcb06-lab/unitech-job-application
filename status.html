@@ -132,10 +132,19 @@
 
   function formatStartDate(raw){
     if(!raw) return raw;
-    // ตัดส่วนเวลา/timezone ทิ้ง เหลือแค่ yyyy-MM-dd ไม่ว่าจะมาเป็น ISO string หรือรูปแบบอื่น
     const s = String(raw);
-    const match = s.match(/^\d{4}-\d{2}-\d{2}/);
-    return match ? match[0] : s;
+    // กรณีเป็น ISO string เช่น 2026-08-24T00:00:00.000Z
+    let match = s.match(/^\d{4}-\d{2}-\d{2}/);
+    if(match) return match[0];
+    // กรณีเป็นรูปแบบอื่น เช่น "Mon Aug 24 2026 07:00:00 GMT+0700 (...)"
+    const d = new Date(s);
+    if(!isNaN(d.getTime())){
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    return s;
   }
 
   async function checkStatus(){
