@@ -174,13 +174,14 @@
       <h2>ตำแหน่งและการศึกษา</h2>
 
       <label>ตำแหน่งที่สนใจสมัคร <span class="required">*</span></label>
-      <select name="position" required>
+      <select name="position" id="position" required>
         <option value="">-- เลือกตำแหน่ง --</option>
         <option value="พนักงานฝ่ายผลิต">พนักงานฝ่ายผลิต</option>
         <option value="QA/QC">QA/QC</option>
         <option value="คลังสินค้า">คลังสินค้า</option>
         <option value="อื่นๆ">อื่นๆ</option>
       </select>
+      <input type="text" name="positionOther" id="positionOther" placeholder="ระบุตำแหน่งที่สนใจ" style="display:none;margin-top:8px;">
 
       <label>วุฒิการศึกษา <span class="required">*</span></label>
       <select name="education" required>
@@ -348,6 +349,20 @@
   const dupScreen = document.getElementById('dupScreen');
   const errorScreen = document.getElementById('errorScreen');
 
+  // แสดงช่องพิมพ์ตำแหน่งเองเมื่อเลือก "อื่นๆ"
+  const positionSelect = document.getElementById('position');
+  const positionOtherInput = document.getElementById('positionOther');
+  positionSelect.addEventListener('change', function() {
+    if (this.value === 'อื่นๆ') {
+      positionOtherInput.style.display = 'block';
+      positionOtherInput.required = true;
+    } else {
+      positionOtherInput.style.display = 'none';
+      positionOtherInput.required = false;
+      positionOtherInput.value = '';
+    }
+  });
+
   // ขยายกล่องข้อความประสบการณ์อัตโนมัติตามที่พิมพ์ ไม่จำกัดความยาว
   const experienceField = document.getElementById('experienceField');
   experienceField.addEventListener('input', function() {
@@ -445,6 +460,11 @@
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
     data.consent = form.consent.checked ? "ยินยอม" : "ไม่ยินยอม";
+
+    if (data.position === "อื่นๆ" && data.positionOther) {
+      data.position = data.positionOther.trim();
+    }
+    delete data.positionOther;
 
     const gradeResult = gradeTest();
     data.typingLowerResult = gradeResult.typingLowerResult;
