@@ -174,8 +174,7 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:30px 16px 10p
 
   <div class="filters" id="filters">
     <div class="chips" id="chips"></div>
-    <div class="sub-row"><span id="count"></span>
-      <label class="toggle"><input type="checkbox" id="showAll"><span class="tr"></span><span id="showAllTxt"></span></label></div>
+    <div class="sub-row"><span id="count"></span></div>
   </div>
   <div class="notice" id="notice"></div>
   <div class="grid" id="jobs"></div>
@@ -310,26 +309,26 @@ function render(){
   $("brand").innerHTML=(LOGO_URL?`<img src="${esc(LOGO_URL)}" alt="UNITECH">`:`<span class="dot">U</span>`)+`<span>UNITECH PCB<small>${t.brandSub}</small></span>`;
   $("eyebrow").textContent=t.eyebrow; $("h1").innerHTML=t.h1; $("sub").textContent=t.sub;
   $("cta1").textContent=t.cta1; $("cta2").textContent=t.cta2;
-  $("showAllTxt").textContent=t.showAll; $("showAll").checked=showAll;
 
   const openJobs=JOBS.filter(isOpen);
   const totalSlots=openJobs.reduce((a,j)=>a+(STATUS[j.id].slots||0),0);
   $("stats").innerHTML=[[loading?"–":openJobs.length,t.stOpen],[loading?"–":(totalSlots||"–"),t.stSlots],["348+",t.stWage]]
     .map(([v,l])=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`).join("");
 
-  const base=showAll?JOBS:openJobs, cnt=g=>base.filter(j=>g==="all"||j.group===g).length;
+  if(group!=="all"&&!openJobs.some(j=>j.group===group))group="all";
+  const base=openJobs, cnt=g=>base.filter(j=>g==="all"||j.group===g).length;
   $("chips").innerHTML=`<button class="chip ${group==="all"?"on":""}" data-g="all">${t.all}<span class="n">${cnt("all")}</span></button>`+
-    GROUPS.filter(g=>cnt(g.id)>0||group===g.id).map(g=>`<button class="chip ${group===g.id?"on":""}" data-g="${g.id}">${GSTYLE[g.id][0]} ${esc(g[lang])}<span class="n">${cnt(g.id)}</span></button>`).join("");
+    GROUPS.filter(g=>cnt(g.id)>0).map(g=>`<button class="chip ${group===g.id?"on":""}" data-g="${g.id}">${GSTYLE[g.id][0]} ${esc(g[lang])}<span class="n">${cnt(g.id)}</span></button>`).join("");
   $("count").textContent=loading?t.loading:t.count(openJobs.length);
 
   if(loading){$("jobs").innerHTML='<div class="skel"></div>'.repeat(4);}
   else{
-    const shown=JOBS.filter(j=>(group==="all"||j.group===group)&&(showAll||isOpen(j))).sort((a,b)=>(isOpen(b)?1:0)-(isOpen(a)?1:0));
+    const shown=openJobs.filter(j=>group==="all"||j.group===group);
     $("jobs").innerHTML=shown.length?shown.map((j,i)=>{
       const open=isOpen(j),n=open?(STATUS[j.id].slots||0):0,[icon,tint]=GSTYLE[j.group];
       return `<article class="card ${open?"":"full"} ${openSet.has(j.id)?"open":""}" data-id="${j.id}" style="animation-delay:${Math.min(i,10)*30}ms">
         <div class="ch"><div class="ic" style="background:${tint}">${icon}</div>
-          <div class="tt"><div class="top-line"><span class="grp">${esc(gname(j.group))}${j.code?" · "+esc(j.code):""}</span>
+          <div class="tt"><div class="top-line"><span class="grp">${esc(gname(j.group))}</span>
             <span class="badge ${open?"b-open":"b-full"}">${open?"● "+t.open:t.full}</span></div>
             <h3 class="title">${esc(j.title[lang])}</h3></div></div>
         <div class="tags">${open&&n>0?`<span class="tag slots">${t.slotsTag(n)}</span>`:""}
@@ -368,7 +367,6 @@ async function load(){
 
 document.querySelector(".lang").addEventListener("click",e=>{const l=e.target.dataset.l;if(!l)return;lang=l;try{localStorage.setItem("jobsLang",l)}catch(x){}render();});
 $("chips").addEventListener("click",e=>{const b=e.target.closest("[data-g]");if(!b)return;group=b.dataset.g;render();$("filters").scrollIntoView({behavior:"smooth"});});
-$("showAll").addEventListener("change",e=>{showAll=e.target.checked;render();});
 $("jobs").addEventListener("click",e=>{
   if(!e.target.closest("[data-more]"))return;
   const c=e.target.closest(".card"),id=c.dataset.id;
